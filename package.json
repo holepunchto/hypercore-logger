@@ -1,0 +1,33 @@
+{
+  "name": "hypercore-logger",
+  "version": "0.0.0",
+  "description": "Distributed logger",
+  "main": "index.js",
+  "dependencies": {
+    "bare-inspect": "^3.0.7",
+    "hyperschema": "^1.10.4",
+    "process-top": "^1.6.0"
+  },
+  "devDependencies": {
+    "standard": "^17.1.2"
+  },
+  "scripts": {
+    "test": "standard"
+  },
+  "imports": {
+    "./inspect.js": {
+      "bare": "bare-inspect",
+      "default": "./inspect.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/holepuncht/hypercore-logger.git"
+  },
+  "author": "Holepunch Inc.",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/holepuncht/hypercore-logger/issues"
+  },
+  "homepage": "https://github.com/holepuncht/hypercore-logger"
+}

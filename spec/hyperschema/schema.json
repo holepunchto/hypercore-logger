@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "schema": [
+    {
+      "name": "stats",
+      "namespace": "logger",
+      "compact": false,
+      "flagsPosition": -1,
+      "fields": [
+        {
+          "name": "cpus",
+          "required": true,
+          "type": "uint",
+          "version": 1
+        },
+        {
+          "name": "cpu",
+          "required": true,
+          "type": "uint",
+          "version": 1
+        },
+        {
+          "name": "cpuThread",
+          "required": true,
+          "type": "uint",
+          "version": 1
+        },
+        {
+          "name": "cpuDelay",
+          "required": true,
+          "type": "uint",
+          "version": 1
+        },
+        {
+          "name": "rss",
+          "required": true,
+          "type": "uint",
+          "version": 1
+        },
+        {
+          "name": "heapUsed",
+          "required": true,
+          "type": "uint",
+          "version": 1
+        },
+        {
+          "name": "heapTotal",
+          "required": true,
+          "type": "uint",
+          "version": 1
+        },
+        {
+          "name": "external",
+          "required": true,
+          "type": "uint",
+          "version": 1
+        }
+      ]
+    },
+    {
+      "name": "entry",
+      "namespace": "logger",
+      "compact": false,
+      "flagsPosition": 1,
+      "fields": [
+        {
+          "name": "timestamp",
+          "required": true,
+          "type": "uint",
+          "version": 1
+        },
+        {
+          "name": "stats",
+          "type": "@logger/stats",
+          "version": 1
+        },
+        {
+          "name": "subsystem",
+          "type": "string",
+          "version": 1
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "version": 1
+        }
+      ]
+    }
+  ]
+}

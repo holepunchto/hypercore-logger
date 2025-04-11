@@ -5,6 +5,8 @@ const Hyperswarm = require('hyperswarm')
 const HypercoreId = require('hypercore-id-encoding')
 const goodbye = require('graceful-goodbye')
 const Hypercore = require('hypercore')
+const tiny = require('tiny-byte-size')
+const crayon = require('tiny-crayon')
 const HypercoreLogger = require('./')
 
 paparam.command(
@@ -26,9 +28,9 @@ async function run (r) {
   const swarm = new Hyperswarm()
 
   swarm.on('connection', (c) => {
-    console.log('[connected to ' + HypercoreId.encode(c.remotePublicKey) + ']')
+    console.log(crayon.blue('[connected to ' + HypercoreId.encode(c.remotePublicKey) + ']'))
     c.on('close', () => {
-      console.log('[disconnected from ' + HypercoreId.encode(c.remotePublicKey) + ']')
+      console.log(crayon.blue('[disconnected from ' + HypercoreId.encode(c.remotePublicKey) + ']'))
     })
     core.replicate(c)
   })
@@ -44,11 +46,17 @@ async function run (r) {
 
   console.log('Tailing', core.id)
 
-  for await (const { timestamp, stats, message } of logger.tail()) {
-    console.log((new Date(timestamp)).toISOString() + ' ' + formatStats(stats) + ': ' + message)
+  for await (const { timestamp, stats, subsystem, message } of logger.tail()) {
+    console.log(crayon.gray(formatStats(timestamp, stats)))
+    console.log(crayon.yellow('[' + (subsystem || 'default') + '] ') + crayon.green(message))
   }
 }
 
-function formatStats () {
-  return '[todo]'
+function formatStats (timestamp, stats) {
+  const cpu = 'cpu: ' + (stats.cpu / 100) + '%/' + stats.cpus + ' (' + ((stats.cpuThread / 100) + '% bare)')
+  const mem = 'rss: ' + tiny(stats.rss)
+  const heap = 'heap: ' + tiny(stats.heapUsed) + ' / ' + tiny(stats.heapTotal)
+  const ext = 'ext: ' + tiny(stats.external)
+  const delay = 'delay: ' + stats.cpuDelay + ' ms'
+  return (new Date(timestamp).toISOString()) + ' | ' + cpu + ' | ' + mem + ' | ' + heap + ' | ' + ext + ' | ' + delay
 }

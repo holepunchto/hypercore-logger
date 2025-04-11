@@ -11,7 +11,9 @@
     "hyperschema": "^1.10.4",
     "hyperswarm": "^4.11.1",
     "paparam": "^1.8.3",
-    "process-top": "^1.6.0"
+    "process-top": "^1.6.0",
+    "tiny-byte-size": "^1.1.0",
+    "tiny-crayon": "^1.0.5"
   },
   "devDependencies": {
     "standard": "^17.1.2"

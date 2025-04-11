@@ -17,7 +17,11 @@ paparam.command(
 
 async function run (r) {
   const storage = r.flags.storage || '/tmp/hypercore-logger'
-  const core = new Hypercore(storage, r.flags.key)
+
+  let [key, peer] = r.flags.key.split('@')
+  if (!peer) peer = r.flags.peer
+
+  const core = new Hypercore(storage, key)
   const logger = new HypercoreLogger(core)
   const swarm = new Hyperswarm()
 
@@ -32,8 +36,8 @@ async function run (r) {
   await core.ready()
   swarm.join(core.discoveryKey)
 
-  if (r.flags.peer) {
-    swarm.joinPeer(HypercoreId.decode(r.flags.peer))
+  if (peer) {
+    swarm.joinPeer(HypercoreId.decode(peer))
   }
 
   goodbye(() => swarm.destroy())

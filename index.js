@@ -55,8 +55,8 @@ module.exports = class HypercoreLogger {
 
     return {
       cpus: this.top.cpus,
-      cpu: (cpu.pct * 10_000) | 0,
-      cpuThread: (cpuThread.pct * 10_000) | 0,
+      cpu: (cpu.percent * 10_000) | 0,
+      cpuThread: (cpuThread.percent * 10_000) | 0,
       cpuDelay: this.top.delay(),
       rss: mem.rss,
       heapUsed: mem.heapUsed,

@@ -50,7 +50,7 @@ Wait for the log to fully open.
 
 #### `await log.log(...msg)`
 
-Log the `msg` arguments as a string representation intended for debugging like `console.log()`'s output.
+Log the `msg` arguments as a string representation intended for debugging, like `console.log()`'s output.
 
 In addition to the string representation, metadata is automatically added to each log. Each appended to the backing Hypercore will look like:
 
@@ -78,7 +78,7 @@ stats: {
 }
 ```
 
-The block is encoded via Hyperschema schema `@logger/entry`.
+The block is encoded via the [Hyperschema](https://github.com/holepunchto/hyperschema) schema [`@logger/entry`](./spec/hyperschema).
 
 #### `const stream = log.tail()`
 

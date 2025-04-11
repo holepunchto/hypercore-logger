@@ -45,7 +45,6 @@ async function run (r) {
   console.log('Tailing', core.id)
 
   for await (const { timestamp, stats, message } of logger.tail()) {
-    console.log('???')
     console.log((new Date(timestamp)).toISOString() + ' ' + formatStats(stats) + ': ' + message)
   }
 }

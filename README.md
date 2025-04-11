@@ -78,7 +78,7 @@ stats: {
 }
 ```
 
-The block is encoded via the [Hyperschema](https://github.com/holepunchto/hyperschema) schema [`@logger/entry`](./spec/hyperschema).
+The block is encoded via the [Hyperschema](https://github.com/holepunchto/hyperschema) schema [`@logger/entry`](./build.js).
 
 #### `const stream = log.tail()`
 

@@ -8,6 +8,7 @@ module.exports = class HypercoreLogger {
   constructor (core) {
     this.core = core
     this.session = core.session({ valueEncoding: encoding })
+    this.session.download({ start: 0, end: -1 })
     this.top = processTop()
     this.subsystem = ''
   }

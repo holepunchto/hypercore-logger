@@ -1,8 +1,10 @@
 const processTop = require('process-top')
+const b4a = require('b4a')
 const { getStruct } = require('./spec/hyperschema/index.js')
 const inspect = require('./inspect.js')
 
 const encoding = getStruct('@logger/entry')
+const bisect = require('/Volumes/superdisk/Developer/Holepunch/hypercore-bisect')
 
 module.exports = class HypercoreLogger {
   constructor (core) {
@@ -41,9 +43,22 @@ module.exports = class HypercoreLogger {
     })
   }
 
-  tail () {
-    return this.session.createReadStream({ live: true })
-  }
+   async tail(since) {
+    let startIndex
+     if (since) {
+       const index = await bisect(this.session, (block) => {
+         const value = Number(block.timestamp)
+         if (value < since) return -1
+         if (value > since) return 1
+         return 0
+       })
+
+       if (index !== -1) {
+         startIndex = index
+       }
+     }
+     return this.session.createReadStream({ live: true, start: startIndex })
+   }
 
   close () {
     return Promise.all([this.core.close(), this.session.close()])

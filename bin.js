@@ -14,6 +14,7 @@ paparam.command(
   paparam.flag('--key, -k <key>', 'log core key'),
   paparam.flag('--peer, -p <key>', 'noise key of peer'),
   paparam.flag('--storage, -s <dir>', 'where to store the core, defaults to /tmp/hypercore-logger'),
+  paparam.flag('--since, -sin <timestamp>', 'unix timestamp in seconds'),
   run
 ).parse()
 
@@ -22,6 +23,8 @@ async function run (r) {
 
   let [key, peer] = r.flags.key.split('@')
   if (!peer) peer = r.flags.peer
+  const since = r.flags.since
+  console.log(since)
 
   const core = new Hypercore(storage, key)
   const logger = new HypercoreLogger(core)
@@ -46,7 +49,7 @@ async function run (r) {
 
   console.log('Tailing', core.id)
 
-  for await (const { timestamp, stats, subsystem, message } of logger.tail()) {
+  for await (const { timestamp, stats, subsystem, message } of await logger.tail(since)) {
     console.log(crayon.gray(formatStats(timestamp, stats)))
     console.log(crayon.yellow('[' + (subsystem || 'default') + '] ') + crayon.green(message))
   }

@@ -14,7 +14,11 @@ paparam.command(
   paparam.flag('--key, -k <key>', 'log core key'),
   paparam.flag('--peer, -p <key>', 'noise key of peer'),
   paparam.flag('--storage, -s <dir>', 'where to store the core, defaults to /tmp/hypercore-logger'),
-  paparam.flag('--since, -sin <timestamp>', 'unix timestamp in seconds'),
+  paparam.flag('--gte, -gte <timestamp>', 'greater than or equal to unix timestamp in seconds'),
+  paparam.flag('--gt, -gt <timestamp>', 'greater than unix timestamp in seconds'),
+  paparam.flag('--lte, -lte <timestamp>', 'less than or equal to than unix timestamp in seconds'),
+  paparam.flag('--lt, -lt <timestamp>', 'less than unix timestamp in seconds'),
+
   run
 ).parse()
 
@@ -23,8 +27,10 @@ async function run (r) {
 
   let [key, peer] = r.flags.key.split('@')
   if (!peer) peer = r.flags.peer
-  const since = r.flags.since
-  console.log(since)
+  const gte = r.flags.gte
+  const gt = r.flags.gt
+  const lte = r.flags.lte
+  const lt = r.flags.lt
 
   const core = new Hypercore(storage, key)
   const logger = new HypercoreLogger(core)
@@ -48,8 +54,7 @@ async function run (r) {
   goodbye(() => swarm.destroy())
 
   console.log('Tailing', core.id)
-
-  for await (const { timestamp, stats, subsystem, message } of await logger.tail(since)) {
+  for await (const { timestamp, stats, subsystem, message } of await logger.tail({ gte, gt, lte, lt })) {
     console.log(crayon.gray(formatStats(timestamp, stats)))
     console.log(crayon.yellow('[' + (subsystem || 'default') + '] ') + crayon.green(message))
   }

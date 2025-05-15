@@ -54,7 +54,8 @@ async function run (r) {
   goodbye(() => swarm.destroy())
 
   console.log('Tailing', core.id)
-  for await (const { timestamp, stats, subsystem, message } of await logger.find({ gte, gt, lte, lt })) {
+  const index = await logger.find({ gte, gt, lte, lt })
+  for await (const { timestamp, stats, subsystem, message } of logger.tail(index)) {
     console.log(crayon.gray(formatStats(timestamp, stats)))
     console.log(crayon.yellow('[' + (subsystem || 'default') + '] ') + crayon.green(message))
   }

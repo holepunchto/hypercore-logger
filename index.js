@@ -42,7 +42,7 @@ module.exports = class HypercoreLogger {
     })
   }
 
-  async find (opts = {}) {
+  async find (opts) {
     let startIndex
     let endIndex
     if (opts.gte) {
@@ -92,11 +92,11 @@ module.exports = class HypercoreLogger {
       }
     }
 
-    return this.session.createReadStream({ live: true, start: startIndex, end: endIndex })
+    return {startIndex, endIndex}
   }
 
-  tail () {
-    return this.session.createReadStream({ live: true })
+  tail (opts = {}) {
+    return this.session.createReadStream({ live: true, start: opts.startIndex, end: opts.endIndex })
   }
 
   close () {

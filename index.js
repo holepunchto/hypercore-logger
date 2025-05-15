@@ -3,6 +3,7 @@ const { getStruct } = require('./spec/hyperschema/index.js')
 const inspect = require('./inspect.js')
 
 const encoding = getStruct('@logger/entry')
+const hisect = require('hisect')
 
 module.exports = class HypercoreLogger {
   constructor (core) {
@@ -41,8 +42,61 @@ module.exports = class HypercoreLogger {
     })
   }
 
-  tail () {
-    return this.session.createReadStream({ live: true })
+  async find (opts) {
+    let start
+    let end
+    if (opts.gte) {
+      const index = await hisect(this.session, (block) => {
+        const value = Number(block.timestamp)
+        if (value < opts.gte) return -1
+        if (value > opts.gte) return 1
+        return 0
+      })
+
+      if (index !== -1) {
+        start = index
+      }
+    } else if (opts.gt) {
+      const gt = Number(opts.gt)
+      const index = await hisect(this.session, (block) => {
+        const value = Number(block.timestamp)
+        return value <= gt ? -1 : 0
+      })
+
+      if (index !== -1) {
+        start = index
+      }
+    }
+
+    if (opts.lt) {
+      const lt = Number(opts.lt)
+      const index = await hisect(this.session, (block) => {
+        const value = Number(block.timestamp)
+        if (value < lt) return -1
+        if (value > lt) return 1
+        return 0
+      })
+
+      if (index !== -1) {
+        end = index
+      }
+    } else if (opts.lte) {
+      const lte = Number(opts.lte)
+      const index = await hisect(this.session, (block) => {
+        const value = Number(block.timestamp)
+        return value <= lte ? -1 : 0
+      })
+
+      if (index !== -1) {
+        end = index
+      }
+    }
+
+    return { start, end }
+  }
+
+  tail (opts = {}) {
+    return this.session.createReadStream({ live: true, start: opts.start, end: opts.end })
   }
 
   close () {

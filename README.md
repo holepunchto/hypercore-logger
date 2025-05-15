@@ -92,6 +92,19 @@ for await (const { timestamp, stats, message } of log.tail()) {
 }
 ```
 
+#### `await logger.find(opts)`
+
+Similar to log.tail() but with filters.
+
+- opts.gte: Start at the first entry with a timestamp >= gte
+  
+- opts.gt: Start at the first entry with a timestamp > gt
+
+- opts.lte: End before the first entry with timestamp > lte
+
+- opts.lt: End before the first entry with timestamp >= lt
+
+
 #### `await log.close()`
 
 Fully close the log and the Hypercore backing it.

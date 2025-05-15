@@ -3,8 +3,9 @@ import Hypercore from 'hypercore'
 
 const logger = new HypercoreLogger(new Hypercore('/tmp/core'))
 
-const stream = await logger.tail()
-stream.on('data', console.log)
+await logger.tail()
+  .on('data', console.log)
+
 let tick = 0
 
 setInterval(() => {

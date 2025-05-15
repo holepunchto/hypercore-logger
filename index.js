@@ -3,7 +3,7 @@ const { getStruct } = require('./spec/hyperschema/index.js')
 const inspect = require('./inspect.js')
 
 const encoding = getStruct('@logger/entry')
-const bisect = require('../hypercore-bisect')
+const hisect = require('hisect')
 
 module.exports = class HypercoreLogger {
   constructor (core) {
@@ -46,7 +46,7 @@ module.exports = class HypercoreLogger {
     let startIndex
     let endIndex
     if (opts.gte) {
-      const index = await bisect(this.session, (block) => {
+      const index = await hisect(this.session, (block) => {
         const value = Number(block.timestamp)
         if (value < opts.gte) return -1
         if (value > opts.gte) return 1
@@ -58,7 +58,7 @@ module.exports = class HypercoreLogger {
       }
     } else if (opts.gt) {
       const gt = Number(opts.gt)
-      const index = await bisect(this.session, (block) => {
+      const index = await hisect(this.session, (block) => {
         const value = Number(block.timestamp)
         return value <= gt ? -1 : 0
       })
@@ -70,7 +70,7 @@ module.exports = class HypercoreLogger {
 
     if (opts.lt) {
       const lt = Number(opts.lt)
-      const index = await bisect(this.session, (block) => {
+      const index = await hisect(this.session, (block) => {
         const value = Number(block.timestamp)
         if (value < lt) return -1
         if (value > lt) return 1
@@ -82,7 +82,7 @@ module.exports = class HypercoreLogger {
       }
     } else if (opts.lte) {
       const lte = Number(opts.lte)
-      const index = await bisect(this.session, (block) => {
+      const index = await hisect(this.session, (block) => {
         const value = Number(block.timestamp)
         return value <= lte ? -1 : 0
       })

@@ -92,7 +92,7 @@ module.exports = class HypercoreLogger {
       }
     }
 
-    return {startIndex, endIndex}
+    return { startIndex, endIndex }
   }
 
   tail (opts = {}) {

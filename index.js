@@ -43,8 +43,8 @@ module.exports = class HypercoreLogger {
   }
 
   async find (opts) {
-    let startIndex
-    let endIndex
+    let start
+    let end
     if (opts.gte) {
       const index = await hisect(this.session, (block) => {
         const value = Number(block.timestamp)
@@ -54,7 +54,7 @@ module.exports = class HypercoreLogger {
       })
 
       if (index !== -1) {
-        startIndex = index
+        start = index
       }
     } else if (opts.gt) {
       const gt = Number(opts.gt)
@@ -64,7 +64,7 @@ module.exports = class HypercoreLogger {
       })
 
       if (index !== -1) {
-        startIndex = index
+        start = index
       }
     }
 
@@ -78,7 +78,7 @@ module.exports = class HypercoreLogger {
       })
 
       if (index !== -1) {
-        endIndex = index
+        end = index
       }
     } else if (opts.lte) {
       const lte = Number(opts.lte)
@@ -88,15 +88,15 @@ module.exports = class HypercoreLogger {
       })
 
       if (index !== -1) {
-        endIndex = index
+        end = index
       }
     }
 
-    return { startIndex, endIndex }
+    return { start, end }
   }
 
   tail (opts = {}) {
-    return this.session.createReadStream({ live: true, start: opts.startIndex, end: opts.endIndex })
+    return this.session.createReadStream({ live: true, start: opts.start, end: opts.end })
   }
 
   close () {

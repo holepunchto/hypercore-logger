@@ -4,7 +4,6 @@
   "description": "Distributed logger",
   "main": "index.js",
   "dependencies": {
-    "bare-inspect": "^3.0.7",
     "graceful-goodbye": "^1.3.3",
     "hisect": "^1.0.0",
     "hypercore": "^11.4.2",

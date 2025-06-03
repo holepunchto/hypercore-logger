@@ -80,10 +80,13 @@ stats: {
 
 The block is encoded via the [Hyperschema](https://github.com/holepunchto/hyperschema) schema [`@logger/entry`](./build.js).
 
-#### `const stream = log.tail()`
+#### `const stream = log.tail(opts)`
 
 Returns a live Readable Stream of the contents of the log. Acts like `tail -f`
 on a file, showing new data as it's appended.
+
+- start: Index of the starting block
+- end: Index of the end block
 
 Example:
 ```js
@@ -91,6 +94,19 @@ for await (const { timestamp, stats, message } of log.tail()) {
   console.log(timestamp, stats, message)
 }
 ```
+
+#### `await logger.find(opts)`
+
+Find start and end blocks to apply filters
+
+- opts.gte: Start at the first entry with a timestamp >= gte
+  
+- opts.gt: Start at the first entry with a timestamp > gt
+
+- opts.lte: End before the first entry with timestamp > lte
+
+- opts.lt: End before the first entry with timestamp >= lt
+
 
 #### `await log.close()`
 

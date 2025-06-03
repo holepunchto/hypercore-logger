@@ -27,10 +27,10 @@ async function run (r) {
 
   let [key, peer] = r.flags.key.split('@')
   if (!peer) peer = r.flags.peer
-  const gte = r.flags.gte
-  const gt = r.flags.gt
-  const lte = r.flags.lte
-  const lt = r.flags.lt
+  const gte = toMs(r.flags.gte)
+  const gt = toMs(r.flags.gt)
+  const lte = toMs(r.flags.lte)
+  const lt = toMs(r.flags.lt)
 
   const core = new Hypercore(storage, key)
   const logger = new HypercoreLogger(core)
@@ -68,4 +68,10 @@ function formatStats (timestamp, stats) {
   const ext = 'ext: ' + tiny(stats.external)
   const delay = 'delay: ' + stats.cpuDelay + ' ms'
   return (new Date(timestamp).toISOString()) + ' | ' + cpu + ' | ' + mem + ' | ' + heap + ' | ' + ext + ' | ' + delay
+}
+
+function toMs (d) {
+  if (d === undefined) return undefined
+  if (/^\d+$/.test(d)) return Number(d)
+  return new Date(d)
 }

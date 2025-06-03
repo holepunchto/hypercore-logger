@@ -1,6 +1,6 @@
 {
   "name": "hypercore-logger",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "description": "Distributed logger",
   "main": "index.js",
   "dependencies": {

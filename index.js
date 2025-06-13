@@ -46,10 +46,11 @@ module.exports = class HypercoreLogger {
     let start
     let end
     if (opts.gte) {
-      const index = await hisect(this.session, (block) => {
+      const target = Number(opts.gte)
+      const index = await hisect.gte(this.session, target, (target, block) => {
         const value = Number(block.timestamp)
-        if (value < opts.gte) return -1
-        if (value > opts.gte) return 1
+        if (value < target) return -1
+        if (value > target) return 1
         return 0
       })
 
@@ -57,10 +58,12 @@ module.exports = class HypercoreLogger {
         start = index
       }
     } else if (opts.gt) {
-      const gt = Number(opts.gt)
-      const index = await hisect(this.session, (block) => {
+      const target = Number(opts.gt)
+      const index = await hisect.gt(this.session, target, (target, block) => {
         const value = Number(block.timestamp)
-        return value <= gt ? -1 : 0
+        if (value < target) return -1
+        if (value > target) return 1
+        return 0
       })
 
       if (index !== -1) {
@@ -69,26 +72,29 @@ module.exports = class HypercoreLogger {
     }
 
     if (opts.lt) {
-      const lt = Number(opts.lt)
-      const index = await hisect(this.session, (block) => {
+      const target = Number(opts.lt)
+      const index = await hisect.lt(this.session, target, (target, block) => {
         const value = Number(block.timestamp)
-        if (value < lt) return -1
-        if (value > lt) return 1
+        if (value < target) return -1
+        if (value > target) return 1
         return 0
       })
 
       if (index !== -1) {
-        end = index
+        end = index + 1
       }
     } else if (opts.lte) {
-      const lte = Number(opts.lte)
-      const index = await hisect(this.session, (block) => {
+      const target = Number(opts.lte)
+      const index = await hisect.lte(this.session, target, (target, block) => {
         const value = Number(block.timestamp)
-        return value <= lte ? -1 : 0
+        if (value < target) return -1
+        if (value > target) return 1
+        return 0
       })
 
       if (index !== -1) {
-        end = index
+        end = index + 1
+        console.log(await this.session.get(end))
       }
     }
 

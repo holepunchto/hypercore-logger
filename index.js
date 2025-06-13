@@ -94,7 +94,6 @@ module.exports = class HypercoreLogger {
 
       if (index !== -1) {
         end = index + 1
-        console.log(await this.session.get(end))
       }
     }
 

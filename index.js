@@ -46,25 +46,15 @@ module.exports = class HypercoreLogger {
     let start
     let end
     if (opts.gte) {
-      const target = Number(opts.gte)
-      const index = await hisect.gte(this.session, target, (target, block) => {
-        const value = Number(block.timestamp)
-        if (value < target) return -1
-        if (value > target) return 1
-        return 0
-      })
+      const target = opts.gte
+      const index = await hisect.gte(this.session, target, cmp)
 
       if (index !== -1) {
         start = index
       }
     } else if (opts.gt) {
-      const target = Number(opts.gt)
-      const index = await hisect.gt(this.session, target, (target, block) => {
-        const value = Number(block.timestamp)
-        if (value < target) return -1
-        if (value > target) return 1
-        return 0
-      })
+      const target = opts.gt
+      const index = await hisect.gt(this.session, target, cmp)
 
       if (index !== -1) {
         start = index
@@ -72,25 +62,15 @@ module.exports = class HypercoreLogger {
     }
 
     if (opts.lt) {
-      const target = Number(opts.lt)
-      const index = await hisect.lt(this.session, target, (target, block) => {
-        const value = Number(block.timestamp)
-        if (value < target) return -1
-        if (value > target) return 1
-        return 0
-      })
+      const target = opts.lt
+      const index = await hisect.lt(this.session, target, cmp)
 
       if (index !== -1) {
         end = index + 1
       }
     } else if (opts.lte) {
-      const target = Number(opts.lte)
-      const index = await hisect.lte(this.session, target, (target, block) => {
-        const value = Number(block.timestamp)
-        if (value < target) return -1
-        if (value > target) return 1
-        return 0
-      })
+      const target = opts.lte
+      const index = await hisect.lte(this.session, target, cmp)
 
       if (index !== -1) {
         end = index + 1
@@ -124,4 +104,8 @@ module.exports = class HypercoreLogger {
       external: mem.external
     }
   }
+}
+
+function cmp (target, block) {
+  return block.timestamp - target
 }
